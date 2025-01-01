@@ -1,0 +1,19 @@
+@import './variables';
+@import './mixins';
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+body{
+    font-family: $font-family;
+    background-color:   $background-color;
+    color: $font-color;
+}
+$primary-color: #4a90e2;
+
+.custom-header {
+  background-color: $primary-color;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
