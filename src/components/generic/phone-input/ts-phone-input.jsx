@@ -1,5 +1,5 @@
 import React, { useImperativeHandle, useState } from "react";
-import { forwardRef } from "react";
+ 
 
 const countries = [
   { name: "United States", code: "+1" },
@@ -9,12 +9,12 @@ const countries = [
   { name: "Australia", code: "+61" },
 ];
 
-const TSPhoneInput = forwardRef((props, ref) => {
+const TSPhoneInput = (props) => {
   const [selectedCountry, setSelectedCountry] = useState(countries[0]);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
 
-  useImperativeHandle(ref,()=>({
+  useImperativeHandle(()=>({
     getValues:()=>({selectedCountry,phoneNumber}),
     clearValues: ()=>{
       setSelectedCountry("");
@@ -71,13 +71,10 @@ const TSPhoneInput = forwardRef((props, ref) => {
             />
           </div>
         </div>
-
-        {error && <p className="text-sm text-red-500">{error}</p>}
-
-        
+        {error && <p className="text-sm text-red-500">{error}</p>}        
       </div>
     </div>
   );
-});
+};
 
 export default TSPhoneInput;

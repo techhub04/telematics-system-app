@@ -1,34 +1,24 @@
-import React, { useRef } from "react";
+import React from "react";
 import TSButton from "../../generic/button/ts-button";
-import TSEmail from "../../generic/email/ts-email";
-import TSPassword from "../../generic/password/ts-password";
-import TSPhoneInput from "../../generic/phone-input/ts-phone-input";
 import { NavLink } from "react-router-dom";
 import usePost from "../../../hooks/api/usePost";
+import useFormResolver from "../../../hooks/validators/use-form-resolver";
+import { registerSchema } from "./register-schema";
+import TSInput from "../../generic/input/ts-input";
+import TSPassword from "../../generic/password/ts-password";
 
 const Register = () => {
-  const formRef = useRef(null);
-  const emailInputRef = useRef("");
-  const passwordInputRef = useRef("");
-  const phoneInputRef = useRef("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useFormResolver(registerSchema, "onSubmit");
+
   const { post, loading, error } = usePost();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (formRef.current.checkValidity()) {
-   
-      const phoneValues = phoneInputRef.current.getValues();
-      var data = {
-        email: emailInputRef.current.value,
-        password: passwordInputRef.current.value,
-        phone: phoneValues.selectedCountry.code + phoneValues.phoneNumber,
-      };
-      var payload = JSON.stringify(data);
-      var response = await post("user/create", payload);      
-    } else {
-      formRef.current.reportValidity();
-    }
+  const onSubmit = async (data) => {
+    var payload = JSON.stringify(data);
+    var response = await post("user/create", payload);
   };
 
   return (
@@ -40,12 +30,25 @@ const Register = () => {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" ref={formRef}>
-          <TSEmail ref={emailInputRef}></TSEmail>
-          <TSPassword ref={passwordInputRef}></TSPassword>
-          <TSPhoneInput ref={phoneInputRef}></TSPhoneInput>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
+          <TSInput
+            {...register("userName")}
+            label="username"
+            error={errors.userName}
+          />
+          <TSInput {...register("email")} error={errors.email} label="email" />
+          <TSPassword
+            {...register("password")}
+            error={errors.password}
+            label="password"
+          />
+          <TSInput
+            {...register("mobile")}
+            label="mobile"
+            error={errors.mobile}
+          />
           <div>
-            <TSButton title="Sign In" onClick={handleSubmit}></TSButton>
+            <TSButton title="Sign In"></TSButton>
           </div>
         </form>
 
